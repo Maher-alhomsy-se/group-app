@@ -110,7 +110,7 @@ function App() {
         <p className="text-xl">Switch to Base network</p>
 
         <span
-          onClick={switchToBase}
+          onClick={!isConnected ? connectWallet : switchToBase}
           className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
         >
           connect
