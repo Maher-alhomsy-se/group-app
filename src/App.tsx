@@ -27,12 +27,12 @@ function App() {
 
   const payHandler = async () => {
     if (!window.ethereum || !isConnected) {
-      toast.error('Connect with your wallet');
+      toast.error('Connect with your wallet', { theme: 'dark' });
       return;
     }
 
     if (!userId) {
-      toast.error('Connect with your telemetry account');
+      toast.error('Connect with your Telegram account', { theme: 'dark' });
       return;
     }
 
