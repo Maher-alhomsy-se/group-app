@@ -14,10 +14,6 @@ function App() {
 
   const [userId, setUserId] = useState<number | null>(null);
 
-  useEffect(() => {
-    connectWallet();
-  }, []);
-
   console.log(isConnected);
   console.log(userId);
 
@@ -28,6 +24,7 @@ function App() {
   const payHandler = async () => {
     if (!window.ethereum || !isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
+      connectWallet();
       return;
     }
 
@@ -110,6 +107,18 @@ function App() {
 
       <div className="flex items-center gap-2">
         <span className="font-bold text-2xl">3.</span>
+        <p className="text-xl">Switch to Base network</p>
+
+        <span
+          onClick={switchToBase}
+          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
+        >
+          connect
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-2xl">4.</span>
         <p className="text-xl">Pay 5$ to accept your joining request</p>
 
         <span
@@ -121,7 +130,7 @@ function App() {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">4.</span>
+        <span className="font-bold text-2xl">5.</span>
         <p className="text-xl">Done.</p>
       </div>
     </main>
