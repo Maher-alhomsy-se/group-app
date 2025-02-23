@@ -13,6 +13,7 @@
     "@reown/appkit": "^1.6.8",
     "@reown/appkit-adapter-ethers": "^1.6.8",
     "@tailwindcss/vite": "^4.0.8",
+    "@telegram-auth/react": "^1.0.4",
     "ethers": "^6.13.5",
     "node-telegram-bot-api": "^0.66.0",
     "react": "^19.0.0",
