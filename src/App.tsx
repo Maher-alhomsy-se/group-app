@@ -30,6 +30,7 @@ function App() {
       toast.error('Connect with your wallet');
       return;
     }
+
     if (!userId) {
       toast.error('Connect with your telemetry account');
       return;
@@ -112,7 +113,7 @@ function App() {
         <p className="text-xl">Pay 5$ to accept your joining request</p>
 
         <span
-          onClick={isConnected && userId ? payHandler : connectWallet}
+          onClick={payHandler}
           className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
         >
           Pay
