@@ -7,6 +7,7 @@ import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
+import { toast } from 'react-toastify';
 
 function App() {
   const { isConnected } = useAppKitAccount();
@@ -25,7 +26,14 @@ function App() {
   };
 
   const payHandler = async () => {
-    if (!window.ethereum || !isConnected) return;
+    if (!window.ethereum || !isConnected) {
+      toast.error('Connect with your wallet');
+      return;
+    }
+    if (!userId) {
+      toast.error('Connect with your telemetry account');
+      return;
+    }
 
     // @ts-ignore
     const provider = new ethers.BrowserProvider(window.ethereum);
