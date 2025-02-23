@@ -17,6 +17,9 @@ function App() {
     connectWallet();
   }, []);
 
+  console.log(isConnected);
+  console.log(userId);
+
   const copyHandler = () => {
     navigator.clipboard.writeText('https://t.me/upfront_app');
   };
@@ -28,6 +31,7 @@ function App() {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const network = await provider.getNetwork();
+    console.log(network);
 
     if (network.chainId.toString() === '1301') {
       console.log('transaction');
