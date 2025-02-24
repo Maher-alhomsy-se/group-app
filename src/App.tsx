@@ -2,17 +2,12 @@ import { useState } from 'react';
 
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import TelegramBot from 'node-telegram-bot-api';
 import { LoginButton } from '@telegram-auth/react';
 
 import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
-
-const bot = new TelegramBot('7992828654:AAGCEaVx1OxZA6Em79ow9P1gP0KE0SB7Mnw', {
-  polling: true,
-});
 
 function App() {
   console.log('BOT TOKEN ', import.meta.env.VITE_BOT_TOKEN);
@@ -83,7 +78,29 @@ function App() {
 
       console.log(import.meta.env.VITE_TELEGRAM_GROUP_ID);
 
-      bot.approveChatJoinRequest(-1002415386979, userId!);
+      fetch(
+        `https://api.telegram.org/bot${
+          import.meta.env.VITE_BOT_TOKEN
+        }/approveChatJoinRequest`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            chat_id: -1002415386979,
+            user_id: userId,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+        .then((res) => {
+          console.log('SUCCESS');
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log('ERROR');
+          console.log(err);
+        });
       toast.success('Success', { theme: 'dark' });
     }
   };
