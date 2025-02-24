@@ -10,13 +10,13 @@ import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
 
-const bot = new TelegramBot(import.meta.env.VITE_BOT_TOKEN, { polling: true });
-
-bot.on('message', (msg) => {
-  console.log(msg);
+const bot = new TelegramBot('7992828654:AAGCEaVx1OxZA6Em79ow9P1gP0KE0SB7Mnw', {
+  polling: true,
 });
 
 function App() {
+  console.log('BOT TOKEN ', import.meta.env.VITE_BOT_TOKEN);
+
   const { isConnected } = useAppKitAccount();
 
   const [userId, setUserId] = useState<number | null>(null);
@@ -53,7 +53,7 @@ function App() {
 
       try {
         const tx = await signer.sendTransaction({
-          to: import.meta.env.VITE_WALLET_ADDRESS,
+          to: '0xa8ed9b14658Bb9ea3e9CC1e32BA08fcbe6888927',
           value: 1805000000000000,
         });
 
@@ -80,10 +80,10 @@ function App() {
 
     if (v === '0.001805') {
       console.log('You pay 5$');
-      bot.approveChatJoinRequest(
-        import.meta.env.VITE_TELEGRAM_GROUP_ID,
-        userId!
-      );
+
+      console.log(import.meta.env.VITE_TELEGRAM_GROUP_ID);
+
+      bot.approveChatJoinRequest(-1002415386979, userId!);
       toast.success('Success', { theme: 'dark' });
     }
   };
