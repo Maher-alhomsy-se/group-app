@@ -106,22 +106,28 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col justify-center gap-3">
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">1.</span>
-        <p className="text-xl">Ask Join to our group</p>
+    <main className="min-h-screen flex flex-col justify-center gap-6">
+      <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2">
+          <span className="text-xl md:font-bold">1.</span>
+          <p className="md:text-xl">Ask Join to our group</p>
+        </div>
 
         <span
           onClick={copyHandler}
-          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
+          className="text-cyan-800 underline hover:text-cyan-900 cursor-pointer md:text-xl"
         >
           Copy Link
         </span>
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">2.</span>
-        <p className="text-xl">Login with your telegram account</p>
+      <div className="flex flex-col md:flex-row md:items-center gap-2">
+        <div className="flex gap-2 items-center">
+          <span className="text-xl md:font-bold">2.</span>
+          <p className="text-left md:text-xl">
+            Login with your telegram account
+          </p>
+        </div>
 
         <span className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer">
           <LoginButton
@@ -138,8 +144,8 @@ function App() {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">3.</span>
-        <p className="text-xl">Switch to Base network</p>
+        <span className="text-xl md:font-bold">3.</span>
+        <p className="md:text-xl">Switch to Base network</p>
 
         <span
           onClick={!isConnected ? connectWallet : switchToBase}
@@ -149,9 +155,11 @@ function App() {
         </span>
       </div>
 
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">4.</span>
-        <p className="text-xl">Pay 5$ to accept your joining request</p>
+      <div className="flex items-center flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xl md:font-bold">4.</span>
+          <p className="md:text-xl">Pay 5$ to accept your joining request</p>
+        </div>
 
         <span
           onClick={payHandler}
@@ -162,8 +170,8 @@ function App() {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="font-bold text-2xl">5.</span>
-        <p className="text-xl">Done.</p>
+        <span className="text-xl md:font-bold">5.</span>
+        <p className="md:text-xl">Done.</p>
       </div>
     </main>
   );
