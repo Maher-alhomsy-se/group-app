@@ -1,13 +1,20 @@
 import { useState } from 'react';
 
 import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
+import TelegramBot from 'node-telegram-bot-api';
 import { LoginButton } from '@telegram-auth/react';
 
 import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
-import { toast } from 'react-toastify';
+
+const bot = new TelegramBot(import.meta.env.VITE_BOT_TOKEN, { polling: true });
+
+bot.on('message', (msg) => {
+  console.log(msg);
+});
 
 function App() {
   const { isConnected } = useAppKitAccount();
@@ -39,12 +46,14 @@ function App() {
     const network = await provider.getNetwork();
     console.log(network);
 
-    if (network.chainId.toString() === '1301') {
+    if (network.chainId.toString() === '8453') {
       console.log('transaction');
+
+      console.log('ADDRESS ', import.meta.env.VITE_WALLET_ADDRESS);
 
       try {
         const tx = await signer.sendTransaction({
-          to: '0x7562D34B4Cb64ff4A100d4e54f500b3d73C321Ce',
+          to: import.meta.env.VITE_WALLET_ADDRESS,
           value: 1805000000000000,
         });
 
@@ -53,6 +62,7 @@ function App() {
         checkHandler(res!.hash);
       } catch (error) {
         console.log('ERROR', error);
+        toast.error('something went wrong', { theme: 'dark' });
       }
     } else {
       await switchToBase();
@@ -70,6 +80,11 @@ function App() {
 
     if (v === '0.001805') {
       console.log('You pay 5$');
+      bot.approveChatJoinRequest(
+        import.meta.env.VITE_TELEGRAM_GROUP_ID,
+        userId!
+      );
+      toast.success('Success', { theme: 'dark' });
     }
   };
 
