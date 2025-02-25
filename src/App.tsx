@@ -37,7 +37,7 @@ function App() {
   }, []);
 
   const payHandler = async () => {
-    if (!window.ethereum || !isConnected) {
+    if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
       connectWallet();
       return;
