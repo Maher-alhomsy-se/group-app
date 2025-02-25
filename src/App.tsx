@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import { LoginButton } from '@telegram-auth/react';
+import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 
 import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
-import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 
 const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
@@ -126,7 +125,43 @@ function App() {
         </span>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center gap-2">
+      <div className="flex items-center gap-2">
+        <span className="text-xl md:font-bold">2.</span>
+        <p className="md:text-xl">Switch to Base network</p>
+
+        <span
+          onClick={!isConnected ? connectWallet : switchToBase}
+          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
+        >
+          connect
+        </span>
+      </div>
+
+      <div className="flex items-center flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-xl md:font-bold">3.</span>
+          <p className="md:text-xl">Pay 5$ to accept your joining request</p>
+        </div>
+
+        <span
+          onClick={payHandler}
+          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
+        >
+          Pay
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="text-xl md:font-bold">4.</span>
+        <p className="md:text-xl">Done.</p>
+      </div>
+    </main>
+  );
+}
+
+export default App;
+/*
+<div className="flex flex-col md:flex-row md:items-center gap-2">
         <div className="flex gap-2 items-center">
           <span className="text-xl md:font-bold">2.</span>
           <p className="text-left md:text-xl">
@@ -147,39 +182,4 @@ function App() {
           />
         </span>
       </div>
-
-      <div className="flex items-center gap-2">
-        <span className="text-xl md:font-bold">3.</span>
-        <p className="md:text-xl">Switch to Base network</p>
-
-        <span
-          onClick={!isConnected ? connectWallet : switchToBase}
-          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
-        >
-          connect
-        </span>
-      </div>
-
-      <div className="flex items-center flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <span className="text-xl md:font-bold">4.</span>
-          <p className="md:text-xl">Pay 5$ to accept your joining request</p>
-        </div>
-
-        <span
-          onClick={payHandler}
-          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
-        >
-          Pay
-        </span>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <span className="text-xl md:font-bold">5.</span>
-        <p className="md:text-xl">Done.</p>
-      </div>
-    </main>
-  );
-}
-
-export default App;
+*/
