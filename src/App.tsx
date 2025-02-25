@@ -112,6 +112,7 @@ function App() {
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
       {isConnected ? 'Connected' : 'Disconnected'}
+      {window.ethereum ? 'ethereum' : 'No ethereum'}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <span className="text-xl md:font-bold">1.</span>
