@@ -32,6 +32,7 @@ function App() {
       init();
 
       console.log('TG Data', tgData);
+      console.log('user id', tgData.tgWebAppData?.user?.id);
     };
 
     fetchUserData();
