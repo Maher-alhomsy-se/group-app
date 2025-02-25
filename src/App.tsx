@@ -7,7 +7,7 @@ import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
-import { useAppKitAccount } from '@reown/appkit/react';
+import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
 
 const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
@@ -19,8 +19,11 @@ function App() {
 
   const [userId, setUserId] = useState<number | null>(null);
 
+  const { walletProvider } = useAppKitProvider('eip155');
+
   console.log(userId);
   console.log(isConnected);
+  console.log(walletProvider);
 
   const copyHandler = () => {
     navigator.clipboard.writeText('https://t.me/upfront_app');
@@ -113,6 +116,11 @@ function App() {
     <main className="min-h-screen flex flex-col justify-center gap-6">
       {isConnected ? 'Connected' : 'Disconnected'}
       {window.ethereum ? 'ethereum' : 'No ethereum'}
+
+      <p>
+        {walletProvider ? 'there is a wallet provider' : 'no wallet provider'}
+      </p>
+
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <span className="text-xl md:font-bold">1.</span>
