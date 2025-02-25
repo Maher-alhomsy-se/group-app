@@ -31,8 +31,7 @@ function App() {
     const fetchUserData = async () => {
       init();
 
-      console.log('TG Data', tgData);
-      console.log('user id', tgData.tgWebAppData?.user?.id);
+      setUserId(tgData.tgWebAppData?.user?.id ?? null);
     };
 
     fetchUserData();
