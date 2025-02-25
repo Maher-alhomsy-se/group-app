@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
@@ -8,20 +8,34 @@ import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 import { useAppKitAccount } from '@reown/appkit/react';
+import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
+
+const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
+const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
-  console.log('BOT TOKEN ', import.meta.env.VITE_BOT_TOKEN);
-
+  const tgData = retrieveLaunchParams();
   const { isConnected } = useAppKitAccount();
 
   const [userId, setUserId] = useState<number | null>(null);
 
-  console.log(isConnected);
   console.log(userId);
+  console.log(isConnected);
 
   const copyHandler = () => {
     navigator.clipboard.writeText('https://t.me/upfront_app');
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      init();
+
+      console.log(tgData.tgWebAppData!.user!.id);
+    };
+
+    fetchUserData();
+  }, []);
 
   const payHandler = async () => {
     if (!window.ethereum || !isConnected) {
@@ -39,16 +53,13 @@ function App() {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const network = await provider.getNetwork();
-    console.log(network);
 
     if (network.chainId.toString() === '8453') {
       console.log('transaction');
 
-      console.log('ADDRESS ', import.meta.env.VITE_WALLET_ADDRESS);
-
       try {
         const tx = await signer.sendTransaction({
-          to: '0xa8ed9b14658Bb9ea3e9CC1e32BA08fcbe6888927',
+          to: ADDRESS,
           value: 1805000000000000,
         });
 
@@ -76,32 +87,26 @@ function App() {
     if (v === '0.001805') {
       console.log('You pay 5$');
 
-      console.log(import.meta.env.VITE_TELEGRAM_GROUP_ID);
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
 
-      fetch(
-        `https://api.telegram.org/bot${
-          import.meta.env.VITE_BOT_TOKEN
-        }/approveChatJoinRequest`,
-        {
+      try {
+        const res = await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
-            chat_id: -1002415386979,
             user_id: userId,
+            chat_id: GROUP_ID,
           }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-        .then((res) => {
-          console.log('SUCCESS');
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log('ERROR');
-          console.log(err);
+          headers: { 'Content-Type': 'application/json' },
         });
-      toast.success('Success', { theme: 'dark' });
+
+        if (res.ok) {
+          console.log(res);
+          console.log('SUCCESS');
+          toast.success('Success', { theme: 'dark' });
+        }
+      } catch (error) {
+        toast.success('Error in approve request', { theme: 'dark' });
+      }
     }
   };
 
