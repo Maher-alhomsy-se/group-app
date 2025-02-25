@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
+import { BrowserProvider, formatEther } from 'ethers';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 
 import './App.css';
@@ -52,7 +52,7 @@ function App() {
     }
 
     // @ts-ignore
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(walletProvider);
     const signer = await provider.getSigner();
     const network = await provider.getNetwork();
 
@@ -79,11 +79,11 @@ function App() {
 
   const checkHandler = async (hash: string) => {
     // @ts-ignore
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(walletProvider);
     const tx = await provider.getTransaction(hash);
     console.log(tx);
 
-    const v = ethers.formatEther(tx!.value);
+    const v = formatEther(tx!.value);
     console.log(v);
 
     if (v === '0.001805') {
