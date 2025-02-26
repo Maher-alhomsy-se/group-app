@@ -14,7 +14,7 @@ const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
-  // const tgData = retrieveLaunchParams();
+  const tgData = retrieveLaunchParams();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
@@ -29,8 +29,8 @@ function App() {
   };
 
   useEffect(() => {
-    // init();
-    // setUserId(tgData.tgWebAppData?.user?.id ?? null);
+    init();
+    setUserId(tgData.tgWebAppData?.user?.id ?? null);
   }, []);
 
   const payHandler = async () => {
