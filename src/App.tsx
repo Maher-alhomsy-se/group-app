@@ -24,6 +24,7 @@ function App() {
   const { walletProvider } = useAppKitProvider('eip155');
 
   const [userId, setUserId] = useState<number | null>(null);
+  const [ether, setEther] = useState<string | null>(null);
   const [network, setNetwork] = useState<Network | null>(null);
 
   const copyHandler = () => {
@@ -42,6 +43,11 @@ function App() {
 
       const provider = new BrowserProvider(walletProvider as EIP1193Provider);
       const network = await provider.getNetwork();
+      const balance = await provider.getBalance(address!);
+
+      const ether = formatEther(balance);
+
+      setEther(ether);
       setNetwork(network);
     };
 
@@ -144,6 +150,7 @@ function App() {
 
         <p> chain_id : {network && network.chainId}</p>
         <p>Network_name : {network && network.name}</p>
+        <p>Your Ether : {ether}</p>
         <p>
           Wallet_Provider :{' '}
           {walletProvider ? 'There is a wallet provider' : 'no wallet provider'}
