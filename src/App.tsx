@@ -14,8 +14,8 @@ const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
-  const tgData = retrieveLaunchParams();
-  const { isConnected } = useAppKitAccount();
+  // const tgData = retrieveLaunchParams();
+  const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
   const [userId, setUserId] = useState<number | null>(null);
@@ -29,8 +29,8 @@ function App() {
   };
 
   useEffect(() => {
-    init();
-    setUserId(tgData.tgWebAppData?.user?.id ?? null);
+    // init();
+    // setUserId(tgData.tgWebAppData?.user?.id ?? null);
   }, []);
 
   const payHandler = async () => {
@@ -108,22 +108,45 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
-      <div className="flex items-center gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
+      <div className="">
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Join <span className="text-blue-500">Windrunners</span>
+        </h2>
+        <p className="text-gray-500 mt-2">
+          Secure your spot in the best airdrop community!
+        </p>
+      </div>
+
+      <div className="flex items-center flex-wrap">
+        {/* <div className="flex items-center gap-2">
           <span className="text-xl md:font-bold">1.</span>
           <p className="md:text-xl">Ask Join to our group</p>
-        </div>
+        </div> */}
 
-        <span
+        {/* <span
           onClick={copyHandler}
           className="text-cyan-800 underline hover:text-cyan-900 cursor-pointer md:text-xl"
         >
           Copy Link
-        </span>
+        </span> */}
+
+        <button
+          onClick={copyHandler}
+          className="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-3 rounded-lg shadow-md hover:bg-blue-700 transition"
+        >
+          📋 Copy Invitation Link
+        </button>
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-xl md:font-bold">2.</span>
+        <button
+          onClick={!isConnected ? connectWallet : switchToBase}
+          className="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition"
+        >
+          🔄 Switch to Base Network
+        </button>
+
+        {/* <span className="text-xl md:font-bold">2.</span>
         <p className="md:text-xl">Switch to Base network</p>
 
         <span
@@ -131,11 +154,17 @@ function App() {
           className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
         >
           connect
-        </span>
+        </span> */}
       </div>
 
       <div className="flex items-center flex-wrap gap-2">
-        <div className="flex items-center gap-2">
+        <button
+          onClick={payHandler}
+          className="ripple w-full bg-yellow-500 text-gray-900 font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition"
+        >
+          💳 Pay $5 & Join
+        </button>
+        {/* <div className="flex items-center gap-2">
           <span className="text-xl md:font-bold">3.</span>
           <p className="md:text-xl">Pay 5$ to accept your joining request</p>
         </div>
@@ -145,13 +174,17 @@ function App() {
           className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
         >
           Pay
-        </span>
+        </span> */}
       </div>
 
-      <div className="flex items-center gap-2">
+      <p className="text-green-500 font-semibold mt-6">
+        ✅ Welcome to Windrunners!
+      </p>
+
+      {/* <div className="flex items-center gap-2">
         <span className="text-xl md:font-bold">4.</span>
         <p className="md:text-xl">Done.</p>
-      </div>
+      </div> */}
     </main>
   );
 }
@@ -179,4 +212,34 @@ export default App;
           />
         </span>
       </div>
+*/
+
+/*
+
+
+<div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center">
+        <!-- Title -->
+        <h2 class="text-2xl font-semibold text-gray-900">Join <span class="text-blue-500">Windrunners</span></h2>
+        <p class="text-gray-500 mt-2">Secure your spot in the best airdrop community!</p>
+
+        <!-- Step 1: Copy Link -->
+        <button class="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-6 rounded-lg shadow-md hover:bg-blue-700 transition">
+            📋 Copy Invitation Link
+        </button>
+
+        <!-- Step 2: Connect Wallet -->
+        <button class="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition">
+            🔄 Switch to Base Network
+        </button>
+
+        <!-- Step 3: Pay & Join -->
+        <button class="ripple w-full bg-yellow-500 text-gray-900 font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition">
+            💳 Pay $5 & Join
+        </button>
+
+        <!-- Step 4: Done -->
+        <p class="text-green-500 font-semibold mt-6">✅ Welcome to Windrunners!</p>
+    </div>
+
+
 */
