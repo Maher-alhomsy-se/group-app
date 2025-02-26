@@ -15,7 +15,7 @@ const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
   const tgData = retrieveLaunchParams();
-  const { isConnected, address } = useAppKitAccount();
+  const { isConnected } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
   const [userId, setUserId] = useState<number | null>(null);
