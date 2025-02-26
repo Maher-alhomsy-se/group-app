@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 
+import {
+  init,
+  openTelegramLink,
+  retrieveLaunchParams,
+} from '@telegram-apps/sdk';
 import { toast } from 'react-toastify';
 import type { EIP1193Provider } from 'viem';
 import { BrowserProvider, formatEther, Network } from 'ethers';
-import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
 
 import './App.css';
@@ -23,7 +27,8 @@ function App() {
   const [network, setNetwork] = useState<Network | null>(null);
 
   const copyHandler = () => {
-    navigator.clipboard.writeText('https://t.me/windrunners_app');
+    openTelegramLink('https://t.me/windrunners_app');
+    // navigator.clipboard.writeText('https://t.me/windrunners_app');
   };
 
   useEffect(() => {
