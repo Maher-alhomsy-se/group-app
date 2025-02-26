@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
 import { toast } from 'react-toastify';
-import { BrowserProvider, formatEther } from 'ethers';
+import type { EIP1193Provider } from 'viem';
+import { BrowserProvider, formatEther, Network } from 'ethers';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
 
@@ -15,23 +16,45 @@ const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
   const tgData = retrieveLaunchParams();
-  const { isConnected } = useAppKitAccount();
+  const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
   const [userId, setUserId] = useState<number | null>(null);
-
-  console.log(userId);
-  console.log(isConnected);
-  console.log(walletProvider);
+  const [network, setNetwork] = useState<Network | null>(null);
 
   const copyHandler = () => {
-    navigator.clipboard.writeText('https://t.me/upfront_app');
+    navigator.clipboard.writeText('https://t.me/windrunners_app');
   };
 
   useEffect(() => {
     init();
     setUserId(tgData.tgWebAppData?.user?.id ?? null);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!walletProvider) return;
+
+      const provider = new BrowserProvider(walletProvider as EIP1193Provider);
+      const network = await provider.getNetwork();
+      setNetwork(network);
+    };
+
+    fetchData();
+
+    if (walletProvider as EIP1193Provider) {
+      (walletProvider as EIP1193Provider).on('chainChanged', fetchData);
+    }
+
+    return () => {
+      if ((walletProvider as EIP1193Provider)?.removeListener) {
+        (walletProvider as EIP1193Provider).removeListener(
+          'chainChanged',
+          fetchData
+        );
+      }
+    };
+  }, [walletProvider]);
 
   const payHandler = async () => {
     if (!isConnected) {
@@ -108,7 +131,21 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
-      <div className="">
+      <div>
+        <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
+        <p className="whitespace-break-spaces">
+          {address?.slice(0, 7)}...{address?.slice(-7)}
+        </p>
+
+        <p> chain_id : {network && network.chainId}</p>
+        <p>Network_name : {network && network.name}</p>
+        <p>
+          Wallet_Provider :{' '}
+          {walletProvider ? 'There is a wallet provider' : 'no wallet provider'}
+        </p>
+      </div>
+
+      <div>
         <h2 className="text-2xl font-semibold text-gray-900">
           Join <span className="text-blue-500">Windrunners</span>
         </h2>
