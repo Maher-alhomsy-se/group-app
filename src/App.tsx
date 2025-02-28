@@ -42,18 +42,13 @@ function App() {
   useEffect(() => {
     const checkPendingTransaction = async () => {
       const pendingTx = localStorage.getItem('pendingTx');
-      setHash('MAHER ' + pendingTx);
 
       if (!pendingTx) {
-        toast.error('there is no pending transaction', { theme: 'dark' });
         return;
-      } else {
-        toast.info('there is  pending transaction', { theme: 'dark' });
       }
 
       const provider = new BrowserProvider(walletProvider as EIP1193Provider);
       const receipt = await provider.getTransactionReceipt(pendingTx);
-      toast.info('RECEIPT', { theme: 'dark' });
 
       if (receipt && receipt.status === 1) {
         fetch('https://group-app-backend.vercel.app/verify', {
@@ -64,9 +59,9 @@ function App() {
           const data = await res.json();
 
           if (res.ok) {
+            localStorage.removeItem('pendingTx');
             toast.success(data.message || 'Success', { theme: 'dark' });
             setHash(null);
-            localStorage.removeItem('pendingTx');
           } else {
             toast.error(data.message || 'Error in fetch', { theme: 'dark' });
           }
@@ -109,8 +104,6 @@ function App() {
   }, [walletProvider]);
 
   const payHandler = async () => {
-    console.log('Click');
-
     // 5463878313
 
     if (!isConnected) {
@@ -126,14 +119,11 @@ function App() {
 
     // @ts-ignore
     const provider = new BrowserProvider(walletProvider);
-    console.log(provider);
 
     const signer = await provider.getSigner();
     const network = await provider.getNetwork();
 
     if (network.chainId.toString() === '8453') {
-      console.log('transaction');
-
       try {
         const tx = await signer.sendTransaction({
           // to: ADDRESS,
@@ -143,9 +133,6 @@ function App() {
         });
 
         localStorage.setItem('pendingTx', tx.hash);
-
-        console.log('TX : ', tx);
-        setHash(tx.hash);
 
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error) {
@@ -163,12 +150,6 @@ function App() {
         <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
         <p className="whitespace-break-spaces">
           {address?.slice(0, 7)}...{address?.slice(-7)}
-        </p>
-
-        <p>
-          {window.localStorage
-            ? 'There is a local host'
-            : 'there is no a local host'}
         </p>
 
         <p> chain_id : {network && network.chainId}</p>
@@ -221,7 +202,7 @@ function App() {
       </p>
 
       <div className="flex flex-wrap">
-        {hash ? `NEW HASH ${hash}` : 'No hash found'}
+        {hash ? `NEW HASH` : 'No hash found'}
       </div>
     </main>
   );
