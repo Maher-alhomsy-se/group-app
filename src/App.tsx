@@ -14,9 +14,9 @@ import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 
-// const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
+const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
 // const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
-// const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
+const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
   const tgData = retrieveLaunchParams();
@@ -100,6 +100,7 @@ function App() {
         });
 
         console.log('TX : ', tx);
+        checkHandler(tx.hash);
 
         fetch('http://localhost:8080/verify', {
           method: 'POST',
@@ -120,40 +121,40 @@ function App() {
     }
   };
 
-  // const checkHandler = async (hash: string) => {
-  //   // @ts-ignore
-  //   const provider = new BrowserProvider(walletProvider);
-  //   const tx = await provider.getTransaction(hash);
-  //   console.log(tx);
+  const checkHandler = async (hash: string) => {
+    // @ts-ignore
+    const provider = new BrowserProvider(walletProvider);
+    const tx = await provider.getTransaction(hash);
+    console.log(tx);
 
-  //   const v = formatEther(tx!.value);
-  //   console.log(v);
+    const v = formatEther(tx!.value);
+    console.log(v);
 
-  //   if (v === '0.001805') {
-  //     console.log('You pay 5$');
+    if (v === '0.001805') {
+      console.log('You pay 5$');
 
-  //     const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
+      const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
 
-  //     try {
-  //       const res = await fetch(url, {
-  //         method: 'POST',
-  //         body: JSON.stringify({
-  //           user_id: userId,
-  //           chat_id: GROUP_ID,
-  //         }),
-  //         headers: { 'Content-Type': 'application/json' },
-  //       });
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            user_id: userId,
+            chat_id: GROUP_ID,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-  //       if (res.ok) {
-  //         console.log(res);
-  //         console.log('SUCCESS');
-  //         toast.success('Success', { theme: 'dark' });
-  //       }
-  //     } catch (error) {
-  //       toast.success('Error in approve request', { theme: 'dark' });
-  //     }
-  //   }
-  // };
+        if (res.ok) {
+          console.log(res);
+          console.log('SUCCESS');
+          toast.success('Success', { theme: 'dark' });
+        }
+      } catch (error) {
+        toast.success('Error in approve request', { theme: 'dark' });
+      }
+    }
+  };
 
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
