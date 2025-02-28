@@ -101,13 +101,13 @@ function App() {
 
         console.log('TX : ', tx);
 
-        const res = await tx.wait();
-
         fetch('http://localhost:8080/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tx: res }),
+          body: JSON.stringify({ tx }),
         });
+
+        const res = await tx.wait();
 
         console.log('RES : ', res);
         // checkHandler(res!.hash);
