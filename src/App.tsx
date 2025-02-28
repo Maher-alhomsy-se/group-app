@@ -17,7 +17,7 @@ import { switchToBase } from './util/switchToBase';
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
-  // const tgData = retrieveLaunchParams();
+  const tgData = retrieveLaunchParams();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
@@ -28,10 +28,10 @@ function App() {
     openTelegramLink('https://t.me/windrunners_app');
   };
 
-  // useEffect(() => {
-  //   init();
-  //   setUserId(tgData.tgWebAppData?.user?.id ?? null);
-  // }, []);
+  useEffect(() => {
+    init();
+    setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  }, []);
 
   useEffect(() => {
     const checkPendingTransaction = async () => {
