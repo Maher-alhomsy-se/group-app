@@ -14,9 +14,9 @@ import './App.css';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 
-const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
-const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
-const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
+// const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
+// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+// const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
   const tgData = retrieveLaunchParams();
@@ -68,6 +68,8 @@ function App() {
   }, [walletProvider]);
 
   const payHandler = async () => {
+    console.log('Click');
+
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
       connectWallet();
@@ -81,6 +83,8 @@ function App() {
 
     // @ts-ignore
     const provider = new BrowserProvider(walletProvider);
+    console.log(provider);
+
     const signer = await provider.getSigner();
     const network = await provider.getNetwork();
 
@@ -89,13 +93,23 @@ function App() {
 
       try {
         const tx = await signer.sendTransaction({
-          to: ADDRESS,
+          // to: ADDRESS,
+          to: '0xAAb109C6Ce162eFA903EFea76bD154f845b8F7b5',
           value: 1805000000000000,
         });
 
+        console.log('TX : ', tx);
+
         const res = await tx.wait();
+
+        fetch('http://localhost:8080/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tx: res }),
+        });
+
         console.log('RES : ', res);
-        checkHandler(res!.hash);
+        // checkHandler(res!.hash);
       } catch (error) {
         console.log('ERROR', error);
         toast.error('something went wrong', { theme: 'dark' });
@@ -105,40 +119,40 @@ function App() {
     }
   };
 
-  const checkHandler = async (hash: string) => {
-    // @ts-ignore
-    const provider = new BrowserProvider(walletProvider);
-    const tx = await provider.getTransaction(hash);
-    console.log(tx);
+  // const checkHandler = async (hash: string) => {
+  //   // @ts-ignore
+  //   const provider = new BrowserProvider(walletProvider);
+  //   const tx = await provider.getTransaction(hash);
+  //   console.log(tx);
 
-    const v = formatEther(tx!.value);
-    console.log(v);
+  //   const v = formatEther(tx!.value);
+  //   console.log(v);
 
-    if (v === '0.001805') {
-      console.log('You pay 5$');
+  //   if (v === '0.001805') {
+  //     console.log('You pay 5$');
 
-      const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
+  //     const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
 
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify({
-            user_id: userId,
-            chat_id: GROUP_ID,
-          }),
-          headers: { 'Content-Type': 'application/json' },
-        });
+  //     try {
+  //       const res = await fetch(url, {
+  //         method: 'POST',
+  //         body: JSON.stringify({
+  //           user_id: userId,
+  //           chat_id: GROUP_ID,
+  //         }),
+  //         headers: { 'Content-Type': 'application/json' },
+  //       });
 
-        if (res.ok) {
-          console.log(res);
-          console.log('SUCCESS');
-          toast.success('Success', { theme: 'dark' });
-        }
-      } catch (error) {
-        toast.success('Error in approve request', { theme: 'dark' });
-      }
-    }
-  };
+  //       if (res.ok) {
+  //         console.log(res);
+  //         console.log('SUCCESS');
+  //         toast.success('Success', { theme: 'dark' });
+  //       }
+  //     } catch (error) {
+  //       toast.success('Error in approve request', { theme: 'dark' });
+  //     }
+  //   }
+  // };
 
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
@@ -167,18 +181,6 @@ function App() {
       </div>
 
       <div className="flex items-center flex-wrap">
-        {/* <div className="flex items-center gap-2">
-          <span className="text-xl md:font-bold">1.</span>
-          <p className="md:text-xl">Ask Join to our group</p>
-        </div> */}
-
-        {/* <span
-          onClick={copyHandler}
-          className="text-cyan-800 underline hover:text-cyan-900 cursor-pointer md:text-xl"
-        >
-          Copy Link
-        </span> */}
-
         <button
           onClick={copyHandler}
           className="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-3 rounded-lg shadow-md hover:bg-blue-700 transition"
@@ -194,16 +196,6 @@ function App() {
         >
           🔄 Switch to Base Network
         </button>
-
-        {/* <span className="text-xl md:font-bold">2.</span>
-        <p className="md:text-xl">Switch to Base network</p>
-
-        <span
-          onClick={!isConnected ? connectWallet : switchToBase}
-          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
-        >
-          connect
-        </span> */}
       </div>
 
       <div className="flex items-center flex-wrap gap-2">
@@ -213,82 +205,13 @@ function App() {
         >
           💳 Pay $5 & Join
         </button>
-        {/* <div className="flex items-center gap-2">
-          <span className="text-xl md:font-bold">3.</span>
-          <p className="md:text-xl">Pay 5$ to accept your joining request</p>
-        </div>
-
-        <span
-          onClick={payHandler}
-          className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer"
-        >
-          Pay
-        </span> */}
       </div>
 
       <p className="text-green-500 font-semibold mt-6">
         ✅ Welcome to Windrunners!
       </p>
-
-      {/* <div className="flex items-center gap-2">
-        <span className="text-xl md:font-bold">4.</span>
-        <p className="md:text-xl">Done.</p>
-      </div> */}
     </main>
   );
 }
 
 export default App;
-/*
-<div className="flex flex-col md:flex-row md:items-center gap-2">
-        <div className="flex gap-2 items-center">
-          <span className="text-xl md:font-bold">2.</span>
-          <p className="text-left md:text-xl">
-            Login with your telegram account
-          </p>
-        </div>
-
-        <span className="text-cyan-800 underline text-xl hover:text-cyan-900 cursor-pointer">
-          <LoginButton
-            lang="en"
-            cornerRadius={5}
-            showAvatar={true}
-            buttonSize="large"
-            botUsername={import.meta.env.VITE_BOT_USER_NAME}
-            onAuthCallback={({ id }) => {
-              setUserId(id);
-            }}
-          />
-        </span>
-      </div>
-*/
-
-/*
-
-
-<div class="bg-white shadow-lg rounded-lg p-6 max-w-md w-full text-center">
-        <!-- Title -->
-        <h2 class="text-2xl font-semibold text-gray-900">Join <span class="text-blue-500">Windrunners</span></h2>
-        <p class="text-gray-500 mt-2">Secure your spot in the best airdrop community!</p>
-
-        <!-- Step 1: Copy Link -->
-        <button class="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-6 rounded-lg shadow-md hover:bg-blue-700 transition">
-            📋 Copy Invitation Link
-        </button>
-
-        <!-- Step 2: Connect Wallet -->
-        <button class="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition">
-            🔄 Switch to Base Network
-        </button>
-
-        <!-- Step 3: Pay & Join -->
-        <button class="ripple w-full bg-yellow-500 text-gray-900 font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition">
-            💳 Pay $5 & Join
-        </button>
-
-        <!-- Step 4: Done -->
-        <p class="text-green-500 font-semibold mt-6">✅ Welcome to Windrunners!</p>
-    </div>
-
-
-*/
