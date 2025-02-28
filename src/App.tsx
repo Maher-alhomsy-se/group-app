@@ -59,7 +59,7 @@ function App() {
         fetch('https://group-app-backend.vercel.app/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tx: pendingTx, userId, address }),
+          body: JSON.stringify({ tx: { hash: pendingTx }, userId, address }),
         }).then(async (res) => {
           const data = await res.json();
 
