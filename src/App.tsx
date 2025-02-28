@@ -15,7 +15,7 @@ import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 
 // const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
-// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 // const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
@@ -93,9 +93,9 @@ function App() {
 
       try {
         const tx = await signer.sendTransaction({
-          // to: ADDRESS,
+          to: ADDRESS,
           // to: '0xAAb109C6Ce162eFA903EFea76bD154f845b8F7b5',
-          to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
+          // to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
           value: 1805000000000000,
         });
 
