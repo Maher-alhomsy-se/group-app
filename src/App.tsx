@@ -133,6 +133,7 @@ function App() {
         });
 
         localStorage.setItem('pendingTx', tx.hash);
+        setHash(tx.hash);
 
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error) {
