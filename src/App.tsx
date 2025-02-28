@@ -6,38 +6,32 @@ import {
   retrieveLaunchParams,
 } from '@telegram-apps/sdk';
 import { toast } from 'react-toastify';
+import { BrowserProvider } from 'ethers';
 import type { EIP1193Provider } from 'viem';
-import { BrowserProvider, formatEther, Network } from 'ethers';
 import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
 
-import './App.css';
+import image from './assets/image.jpg';
 import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 
-// const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
-// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
-// const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
+const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
-  const tgData = retrieveLaunchParams();
+  // const tgData = retrieveLaunchParams();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider('eip155');
 
-  const [userId, setUserId] = useState<number | null>(null);
-  const [ether, setEther] = useState<string | null>(null);
-  const [network, setNetwork] = useState<Network | null>(null);
-
   const [hash, setHash] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   const copyHandler = () => {
     openTelegramLink('https://t.me/windrunners_app');
-    // navigator.clipboard.writeText('https://t.me/windrunners_app');
   };
 
-  useEffect(() => {
-    init();
-    setUserId(tgData.tgWebAppData?.user?.id ?? null);
-  }, []);
+  // useEffect(() => {
+  //   init();
+  //   setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  // }, []);
 
   useEffect(() => {
     const checkPendingTransaction = async () => {
@@ -73,39 +67,7 @@ function App() {
     checkPendingTransaction();
   }, [hash]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!walletProvider) return;
-
-      const provider = new BrowserProvider(walletProvider as EIP1193Provider);
-      const network = await provider.getNetwork();
-      const balance = await provider.getBalance(address!);
-
-      const ether = formatEther(balance);
-
-      setEther(ether);
-      setNetwork(network);
-    };
-
-    fetchData();
-
-    if (walletProvider as EIP1193Provider) {
-      (walletProvider as EIP1193Provider).on('chainChanged', fetchData);
-    }
-
-    return () => {
-      if ((walletProvider as EIP1193Provider)?.removeListener) {
-        (walletProvider as EIP1193Provider).removeListener(
-          'chainChanged',
-          fetchData
-        );
-      }
-    };
-  }, [walletProvider]);
-
   const payHandler = async () => {
-    // 5463878313
-
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
       connectWallet();
@@ -126,9 +88,7 @@ function App() {
     if (network.chainId.toString() === '8453') {
       try {
         const tx = await signer.sendTransaction({
-          // to: ADDRESS,
-          // to: '0xAAb109C6Ce162eFA903EFea76bD154f845b8F7b5',
-          to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
+          to: ADDRESS,
           value: 1805000000000000,
         });
 
@@ -147,20 +107,9 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
-      <div>
-        <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
-        <p className="whitespace-break-spaces">
-          {address?.slice(0, 7)}...{address?.slice(-7)}
-        </p>
+      <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
 
-        <p> chain_id : {network && network.chainId}</p>
-        <p>Network_name : {network && network.name}</p>
-        <p>Your Ether : {ether}</p>
-        <p>
-          Wallet_Provider :{' '}
-          {walletProvider ? 'There is a wallet provider' : 'no wallet provider'}
-        </p>
-      </div>
+      <img src={image} className="rounded-md" />
 
       <div>
         <h2 className="text-2xl font-semibold text-gray-900">
@@ -201,10 +150,6 @@ function App() {
       <p className="text-green-500 font-semibold mt-6">
         ✅ Welcome to Windrunners!
       </p>
-
-      <div className="flex flex-wrap">
-        {hash ? `NEW HASH` : 'No hash found'}
-      </div>
     </main>
   );
 }
