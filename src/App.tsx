@@ -60,11 +60,13 @@ function App() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tx: pendingTx, userId, address }),
-        }).then((res) => {
+        }).then(async (res) => {
+          const data = await res.json();
+
           if (res.ok) {
-            toast.success('Success', { theme: 'dark' });
+            toast.success(data.message || 'Success', { theme: 'dark' });
           } else {
-            toast.error('Error in fetch', { theme: 'dark' });
+            toast.error(data.message || 'Error in fetch', { theme: 'dark' });
           }
         });
       } else {
