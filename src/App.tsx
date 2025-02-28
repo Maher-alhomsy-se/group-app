@@ -27,6 +27,8 @@ function App() {
   const [ether, setEther] = useState<string | null>(null);
   const [network, setNetwork] = useState<Network | null>(null);
 
+  const [hash, setHash] = useState<string | null>(null);
+
   const copyHandler = () => {
     openTelegramLink('https://t.me/windrunners_app');
     // navigator.clipboard.writeText('https://t.me/windrunners_app');
@@ -35,6 +37,37 @@ function App() {
   useEffect(() => {
     init();
     setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  }, []);
+
+  useEffect(() => {
+    const checkPendingTransaction = async () => {
+      const pendingTx = localStorage.getItem('pendingTx');
+      setHash(pendingTx);
+
+      if (!pendingTx) {
+        toast.error('there is no pending transaction', { theme: 'dark' });
+        return;
+      }
+
+      const provider = new BrowserProvider(walletProvider as EIP1193Provider);
+      const receipt = await provider.getTransactionReceipt(pendingTx);
+      if (receipt && receipt.status === 1) {
+        fetch('https://group-app-backend.vercel.app/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tx: pendingTx, userId, address }),
+        }).then((res) => {
+          if (res.ok) {
+            toast.success('Success', { theme: 'dark' });
+          } else {
+            toast.error('Error in fetch', { theme: 'dark' });
+          }
+        });
+      } else {
+        toast.error('receipt not found', { theme: 'dark' });
+      }
+    };
+    checkPendingTransaction();
   }, []);
 
   useEffect(() => {
@@ -101,17 +134,12 @@ function App() {
           value: 1805000000000000,
         });
 
-        console.log('TX : ', tx);
+        localStorage.setItem('pendingTx', tx.hash);
 
-        fetch('https://group-app-backend.vercel.app/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tx, userId, address }),
-        }).then((res) => {
-          if (res.ok) {
-            toast.success('Success', { theme: 'dark' });
-          }
-        });
+        console.log('TX : ', tx);
+        setHash(tx.hash);
+
+        toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error) {
         console.log('ERROR', error);
         toast.error('something went wrong', { theme: 'dark' });
@@ -183,6 +211,8 @@ function App() {
       <p className="text-green-500 font-semibold mt-6">
         ✅ Welcome to Windrunners!
       </p>
+
+      {hash ? `NEW HASH ${hash}` : 'No hash found'}
     </main>
   );
 }
