@@ -65,6 +65,8 @@ function App() {
 
           if (res.ok) {
             toast.success(data.message || 'Success', { theme: 'dark' });
+            setHash(null);
+            localStorage.removeItem('pendingTx');
           } else {
             toast.error(data.message || 'Error in fetch', { theme: 'dark' });
           }
