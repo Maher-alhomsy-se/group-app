@@ -42,15 +42,19 @@ function App() {
   useEffect(() => {
     const checkPendingTransaction = async () => {
       const pendingTx = localStorage.getItem('pendingTx');
-      setHash(pendingTx);
+      setHash('MAHER ' + pendingTx);
 
       if (!pendingTx) {
         toast.error('there is no pending transaction', { theme: 'dark' });
         return;
+      } else {
+        toast.info('there is  pending transaction', { theme: 'dark' });
       }
 
       const provider = new BrowserProvider(walletProvider as EIP1193Provider);
       const receipt = await provider.getTransactionReceipt(pendingTx);
+      toast.info('RECEIPT', { theme: 'dark' });
+
       if (receipt && receipt.status === 1) {
         fetch('https://group-app-backend.vercel.app/verify', {
           method: 'POST',
@@ -68,7 +72,7 @@ function App() {
       }
     };
     checkPendingTransaction();
-  }, []);
+  }, [hash]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -212,7 +216,9 @@ function App() {
         ✅ Welcome to Windrunners!
       </p>
 
-      {hash ? `NEW HASH ${hash}` : 'No hash found'}
+      <div className="flex flex-wrap">
+        {hash ? `NEW HASH ${hash}` : 'No hash found'}
+      </div>
     </main>
   );
 }
