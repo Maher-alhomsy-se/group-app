@@ -104,7 +104,7 @@ function App() {
         fetch('http://localhost:8080/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tx }),
+          body: JSON.stringify({ tx, userId }),
         });
 
         const res = await tx.wait();
