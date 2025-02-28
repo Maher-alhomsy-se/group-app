@@ -15,7 +15,7 @@ import connectWallet from './util/connectWallet';
 import { switchToBase } from './util/switchToBase';
 
 // const BOT_TOKEN = import.meta.env.VITE_BOT_TOKEN;
-const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 // const GROUP_ID = import.meta.env.VITE_TELEGRAM_GROUP_ID;
 
 function App() {
@@ -70,6 +70,8 @@ function App() {
   const payHandler = async () => {
     console.log('Click');
 
+    // 5463878313
+
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
       connectWallet();
@@ -93,25 +95,23 @@ function App() {
 
       try {
         const tx = await signer.sendTransaction({
-          to: ADDRESS,
+          // to: ADDRESS,
           // to: '0xAAb109C6Ce162eFA903EFea76bD154f845b8F7b5',
-          // to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
+          to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
           value: 1805000000000000,
         });
 
         console.log('TX : ', tx);
-        // checkHandler(tx.hash);
 
-        fetch('http://localhost:8080/verify', {
+        fetch('https://group-app-backend.vercel.app/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tx, userId, address }),
+        }).then((res) => {
+          if (res.ok) {
+            toast.success('Success', { theme: 'dark' });
+          }
         });
-
-        // const res = await tx.wait();
-
-        // console.log('RES : ', res);
-        // checkHandler(res!.hash);
       } catch (error) {
         console.log('ERROR', error);
         toast.error('something went wrong', { theme: 'dark' });
@@ -121,47 +121,18 @@ function App() {
     }
   };
 
-  // const checkHandler = async (hash: string) => {
-  //   // @ts-ignore
-  //   const provider = new BrowserProvider(walletProvider);
-  //   const tx = await provider.getTransaction(hash);
-  //   console.log(tx);
-
-  //   const v = formatEther(tx!.value);
-  //   console.log(v);
-
-  //   if (v === '0.001805') {
-  //     console.log('You pay 5$');
-
-  //     const url = `https://api.telegram.org/bot${BOT_TOKEN}/approveChatJoinRequest`;
-
-  //     try {
-  //       const res = await fetch(url, {
-  //         method: 'POST',
-  //         body: JSON.stringify({
-  //           user_id: userId,
-  //           chat_id: GROUP_ID,
-  //         }),
-  //         headers: { 'Content-Type': 'application/json' },
-  //       });
-
-  //       if (res.ok) {
-  //         console.log(res);
-  //         console.log('SUCCESS');
-  //         toast.success('Success', { theme: 'dark' });
-  //       }
-  //     } catch (error) {
-  //       toast.success('Error in approve request', { theme: 'dark' });
-  //     }
-  //   }
-  // };
-
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
       <div>
         <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
         <p className="whitespace-break-spaces">
           {address?.slice(0, 7)}...{address?.slice(-7)}
+        </p>
+
+        <p>
+          {window.localStorage
+            ? 'There is a local host'
+            : 'there is no a local host'}
         </p>
 
         <p> chain_id : {network && network.chainId}</p>
