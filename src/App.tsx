@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { BrowserProvider } from 'ethers';
 import type { EIP1193Provider } from 'viem';
+import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
-import { init, closeMiniApp, retrieveLaunchParams } from '@telegram-apps/sdk';
 
 import image from './assets/image.jpg';
 import connectWallet from './util/connectWallet';
@@ -143,10 +143,7 @@ function App() {
         </button>
       </div>
 
-      <p
-        onClick={() => closeMiniApp()}
-        className="text-green-500 font-semibold mt-6"
-      >
+      <p className="text-green-500 font-semibold mt-6">
         ✅ Welcome to Windrunners!
       </p>
     </main>
