@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import {
-  init,
-  openTelegramLink,
-  retrieveLaunchParams,
-} from '@telegram-apps/sdk';
 import { toast } from 'react-toastify';
 import { BrowserProvider } from 'ethers';
 import type { EIP1193Provider } from 'viem';
 import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
+import { init, closeMiniApp, retrieveLaunchParams } from '@telegram-apps/sdk';
 
 import image from './assets/image.jpg';
 import connectWallet from './util/connectWallet';
@@ -24,9 +20,9 @@ function App() {
   const [hash, setHash] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
 
-  const copyHandler = () => {
-    openTelegramLink('https://t.me/windrunners_app');
-  };
+  // const copyHandler = () => {
+  //   openTelegramLink('https://t.me/windrunners_app');
+  // };
 
   useEffect(() => {
     init();
@@ -120,14 +116,14 @@ function App() {
         </p>
       </div>
 
-      <div className="flex items-center flex-wrap">
+      {/* <div className="flex items-center flex-wrap">
         <button
           onClick={copyHandler}
           className="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-3 rounded-lg shadow-md hover:bg-blue-700 transition"
         >
           📋 Copy Invitation Link
         </button>
-      </div>
+      </div> */}
 
       <div className="flex items-center gap-2">
         <button
@@ -147,7 +143,10 @@ function App() {
         </button>
       </div>
 
-      <p className="text-green-500 font-semibold mt-6">
+      <p
+        onClick={() => closeMiniApp()}
+        className="text-green-500 font-semibold mt-6"
+      >
         ✅ Welcome to Windrunners!
       </p>
     </main>
