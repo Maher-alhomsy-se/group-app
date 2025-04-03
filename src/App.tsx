@@ -15,7 +15,7 @@ const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 function App() {
   const tgData = retrieveLaunchParams();
   const { isConnected, address } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider('eip155');
+  const { walletProvider } = useAppKitProvider<EIP1193Provider>('eip155');
 
   const [hash, setHash] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
@@ -37,7 +37,7 @@ function App() {
         return;
       }
 
-      const provider = new BrowserProvider(walletProvider as EIP1193Provider);
+      const provider = new BrowserProvider(walletProvider);
       const receipt = await provider.getTransactionReceipt(pendingTx);
 
       if (receipt && receipt.status === 1) {
@@ -75,7 +75,6 @@ function App() {
       return;
     }
 
-    // @ts-ignore
     const provider = new BrowserProvider(walletProvider);
 
     const signer = await provider.getSigner();
@@ -98,18 +97,23 @@ function App() {
       }
     } else {
       toast.error('Please switch to the correct network', { theme: 'dark' });
-      await switchToBase(walletProvider as BrowserProvider);
+      await switchToBase(walletProvider);
     }
   };
 
-  const switchNetowrk = () => {
+  const switchNetowrk = async () => {
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
       connectWallet();
       return;
     }
 
-    switchToBase(walletProvider as BrowserProvider);
+    if (!walletProvider) {
+      toast.error('Wallet provider not found', { theme: 'dark' });
+      return;
+    }
+
+    await switchToBase(walletProvider);
   };
 
   return (

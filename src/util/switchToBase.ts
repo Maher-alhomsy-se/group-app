@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ethers } from 'ethers';
+import { EIP1193Provider } from 'viem';
+import { BrowserProvider } from 'ethers';
 
 const BASE_PARAMS = {
   chainId: '0x2105',
@@ -13,9 +13,8 @@ const BASE_PARAMS = {
   blockExplorerUrls: ['https://basescan.org/'],
 };
 
-export const switchToBase = async (walletProvider: ethers.BrowserProvider) => {
-  // @ts-ignore
-  const provider = new ethers.BrowserProvider(walletProvider);
+export const switchToBase = async (walletProvider: EIP1193Provider) => {
+  const provider = new BrowserProvider(walletProvider);
 
   try {
     await provider.send('wallet_addEthereumChain', [BASE_PARAMS]);
