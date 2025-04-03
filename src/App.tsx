@@ -94,6 +94,7 @@ function App() {
       } catch (error: any) {
         console.log('ERROR');
         console.log(error.toString());
+        console.log(error.message);
 
         toast.error(error.toString(), { theme: 'dark' });
       }
