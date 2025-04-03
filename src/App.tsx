@@ -92,13 +92,22 @@ function App() {
 
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error: any) {
-        console.log('ERROR');
-        console.log(error.toString());
-        console.log('\n');
+        console.error(error);
 
-        console.log(error.message.info);
+        let errorMessage = 'Transaction failed';
+        if (typeof error === 'object' && error !== null) {
+          if (
+            'info' in error &&
+            typeof error.info === 'object' &&
+            error.info !== null
+          ) {
+            errorMessage = error.info?.error?.message || errorMessage;
+          } else if ('message' in error) {
+            errorMessage = error.message;
+          }
+        }
 
-        toast.error(error.toString(), { theme: 'dark' });
+        toast.error(errorMessage, { theme: 'dark' });
       }
     } else {
       toast.error('Please switch to the correct network', { theme: 'dark' });
