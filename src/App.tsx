@@ -94,10 +94,10 @@ function App() {
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error) {
         console.log('ERROR', error);
-        toast.error('something went wrong', { theme: 'dark' });
+        toast.error(error as string, { theme: 'dark' });
       }
     } else {
-      await switchToBase();
+      await switchToBase(walletProvider as BrowserProvider);
     }
   };
 
@@ -127,7 +127,11 @@ function App() {
 
       <div className="flex items-center gap-2">
         <button
-          onClick={!isConnected ? connectWallet : switchToBase}
+          onClick={
+            !isConnected
+              ? connectWallet
+              : switchToBase.bind(null, walletProvider as BrowserProvider)
+          }
           className="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition"
         >
           🔄 Switch to Base Network

@@ -13,9 +13,9 @@ const BASE_PARAMS = {
   blockExplorerUrls: ['https://basescan.org/'],
 };
 
-export const switchToBase = async () => {
+export const switchToBase = async (walletProvider: ethers.BrowserProvider) => {
   // @ts-ignore
-  const provider = new ethers.BrowserProvider(window.ethereum);
+  const provider = new ethers.BrowserProvider(walletProvider);
 
   try {
     await provider.send('wallet_addEthereumChain', [BASE_PARAMS]);
