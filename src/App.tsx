@@ -94,18 +94,7 @@ function App() {
       } catch (error: any) {
         console.error(error);
 
-        let errorMessage = 'Transaction failed';
-        if (typeof error === 'object' && error !== null) {
-          if (
-            'info' in error &&
-            typeof error.info === 'object' &&
-            error.info !== null
-          ) {
-            errorMessage = error.info?.error?.message || errorMessage;
-          } else if ('message' in error) {
-            errorMessage = error.message;
-          }
-        }
+        let errorMessage = error.info?.error?.message || 'Transaction failed';
 
         toast.error(errorMessage, { theme: 'dark' });
       }
