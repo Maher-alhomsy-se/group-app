@@ -92,7 +92,9 @@ function App() {
 
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
       } catch (error) {
-        console.log('ERROR', error);
+        console.log('ERROR');
+        console.log(error);
+
         toast.error(error as string, { theme: 'dark' });
       }
     } else {
