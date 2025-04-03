@@ -84,7 +84,8 @@ function App() {
       try {
         const tx = await signer.sendTransaction({
           to: ADDRESS,
-          value: 1805000000000000,
+          value: 5415000000000000,
+          // value: 1805000000000000,
         });
 
         localStorage.setItem('pendingTx', tx.hash);
