@@ -1,4 +1,5 @@
 import { EIP1193Provider } from 'viem';
+import { toast } from 'react-toastify';
 import { BrowserProvider } from 'ethers';
 
 const BASE_PARAMS = {
@@ -16,12 +17,17 @@ const BASE_PARAMS = {
 export const switchToBase = async (walletProvider: EIP1193Provider) => {
   const provider = new BrowserProvider(walletProvider);
 
-  try {
-    await provider.send('wallet_addEthereumChain', [BASE_PARAMS]);
+  if (!provider) {
+    toast.error('error in switch to base', { theme: 'dark' });
+    return;
+  }
 
-    await provider.send('wallet_switchEthereumChain', [
-      { chainId: BASE_PARAMS.chainId },
-    ]);
+  try {
+    // Try switching first
+    await walletProvider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: BASE_PARAMS.chainId }],
+    });
   } catch (error) {
     // @ts-ignore
     if (error.code === 4902) {
