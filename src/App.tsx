@@ -102,6 +102,16 @@ function App() {
     }
   };
 
+  const switchNetowrk = () => {
+    if (!isConnected) {
+      toast.error('Connect with your wallet', { theme: 'dark' });
+      connectWallet();
+      return;
+    }
+
+    switchToBase(walletProvider as BrowserProvider);
+  };
+
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
       <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
@@ -128,11 +138,7 @@ function App() {
 
       <div className="flex items-center gap-2">
         <button
-          onClick={
-            !isConnected
-              ? connectWallet
-              : switchToBase.bind(null, walletProvider as BrowserProvider)
-          }
+          onClick={switchNetowrk}
           className="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition"
         >
           🔄 Switch to Base Network
