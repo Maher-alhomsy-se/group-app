@@ -97,6 +97,7 @@ function App() {
         toast.error(error as string, { theme: 'dark' });
       }
     } else {
+      toast.error('Please switch to the correct network', { theme: 'dark' });
       await switchToBase(walletProvider as BrowserProvider);
     }
   };
