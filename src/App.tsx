@@ -91,11 +91,11 @@ function App() {
         setHash(tx.hash);
 
         toast.info('Confirm transaction in MetaMask', { theme: 'dark' });
-      } catch (error) {
+      } catch (error: any) {
         console.log('ERROR');
-        console.log(error);
+        console.log(error.toString());
 
-        toast.error(error as string, { theme: 'dark' });
+        toast.error(error.toString(), { theme: 'dark' });
       }
     } else {
       toast.error('Please switch to the correct network', { theme: 'dark' });
