@@ -135,15 +135,6 @@ function App() {
         </p>
       </div>
 
-      {/* <div className="flex items-center flex-wrap">
-        <button
-          onClick={copyHandler}
-          className="ripple w-full bg-blue-600 text-white font-semibold py-3 mt-3 rounded-lg shadow-md hover:bg-blue-700 transition"
-        >
-          📋 Copy Invitation Link
-        </button>
-      </div> */}
-
       <div className="flex items-center gap-2">
         <button
           onClick={switchNetowrk}
@@ -162,8 +153,12 @@ function App() {
         </button>
       </div>
 
-      <p className="text-green-500 font-semibold mt-6">
-        ✅ Welcome to Windrunners!
+      <p className="font-semibold opacity-70 ">
+        This channel is for crypto related tasks, updates, and airdrops.
+        Disclaimer:{' '}
+        <strong>
+          Please do your own research before joining to any airdrops project.
+        </strong>
       </p>
     </main>
   );
