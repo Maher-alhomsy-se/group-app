@@ -158,7 +158,7 @@ function App() {
           onClick={payHandler}
           className="ripple w-full bg-yellow-500 text-gray-900 font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition"
         >
-          💳 Pay $5 & Join
+          💳 Pay $15 & Join
         </button>
       </div>
 
