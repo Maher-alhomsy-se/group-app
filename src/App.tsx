@@ -13,7 +13,7 @@ import { switchToBase } from './util/switchToBase';
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
-  const tgData = retrieveLaunchParams();
+  // const tgData = retrieveLaunchParams();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider<EIP1193Provider>('eip155');
 
@@ -24,10 +24,10 @@ function App() {
   //   openTelegramLink('https://t.me/windrunners_app');
   // };
 
-  useEffect(() => {
-    init();
-    setUserId(tgData.tgWebAppData?.user?.id ?? null);
-  }, []);
+  // useEffect(() => {
+  //   init();
+  //   setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  // }, []);
 
   useEffect(() => {
     const checkPendingTransaction = async () => {
@@ -147,7 +147,7 @@ function App() {
       <div className="flex items-center gap-2">
         <button
           onClick={switchNetowrk}
-          className="ripple w-full bg-green-600 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition"
+          className="ripple w-full bg-blue-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-green-700 transition"
         >
           🔄 Switch to Base Network
         </button>
@@ -156,7 +156,7 @@ function App() {
       <div className="flex items-center flex-wrap gap-2">
         <button
           onClick={payHandler}
-          className="ripple w-full bg-yellow-500 text-gray-900 font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition"
+          className="ripple w-full bg-[#22202d] text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-yellow-600 transition"
         >
           💳 Pay $15 & Join
         </button>
