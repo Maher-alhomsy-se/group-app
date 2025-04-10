@@ -123,6 +123,13 @@ function App() {
   return (
     <main className="min-h-screen flex flex-col justify-center gap-6">
       <p>{isConnected ? 'Connected' : 'Not Connected'}</p>
+      <p>
+        {address && (
+          <>
+            {address.slice(0, 7)}...{address.slice(-7)}
+          </>
+        )}
+      </p>
 
       <img src={image} className="rounded-md" />
 
