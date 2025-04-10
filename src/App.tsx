@@ -141,7 +141,7 @@ function App() {
           onClick={disconnect}
           className="ripple w-full bg-sky-700 text-black font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-red-700 transition"
         >
-          Disconnext
+          Disconnect
         </button>
       )}
 
