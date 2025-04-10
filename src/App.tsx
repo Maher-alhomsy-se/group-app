@@ -17,7 +17,7 @@ import { switchToBase } from './util/switchToBase';
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
-  const tgData = retrieveLaunchParams();
+  // const tgData = retrieveLaunchParams();
   const { disconnect } = useDisconnect();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider<EIP1193Provider>('eip155');
@@ -29,10 +29,10 @@ function App() {
   //   openTelegramLink('https://t.me/windrunners_app');
   // };
 
-  useEffect(() => {
-    init();
-    setUserId(tgData.tgWebAppData?.user?.id ?? null);
-  }, []);
+  // useEffect(() => {
+  //   init();
+  //   setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  // }, []);
 
   useEffect(() => {
     const checkPendingTransaction = async () => {
@@ -139,7 +139,7 @@ function App() {
       {isConnected && (
         <button
           onClick={disconnect}
-          className="ripple w-full bg-red-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-red-700 transition"
+          className="ripple w-full bg-sky-700 text-black font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-red-700 transition"
         >
           Discconect
         </button>
