@@ -4,7 +4,11 @@ import { toast } from 'react-toastify';
 import { BrowserProvider } from 'ethers';
 import type { EIP1193Provider } from 'viem';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
-import { useAppKitAccount, useAppKitProvider } from '@reown/appkit/react';
+import {
+  useAppKitAccount,
+  useAppKitProvider,
+  useDisconnect,
+} from '@reown/appkit/react';
 
 import image from './assets/image.jpg';
 import connectWallet from './util/connectWallet';
@@ -13,7 +17,8 @@ import { switchToBase } from './util/switchToBase';
 const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
-  const tgData = retrieveLaunchParams();
+  // const tgData = retrieveLaunchParams();
+  const { disconnect } = useDisconnect();
   const { isConnected, address } = useAppKitAccount();
   const { walletProvider } = useAppKitProvider<EIP1193Provider>('eip155');
 
@@ -24,10 +29,10 @@ function App() {
   //   openTelegramLink('https://t.me/windrunners_app');
   // };
 
-  useEffect(() => {
-    init();
-    setUserId(tgData.tgWebAppData?.user?.id ?? null);
-  }, []);
+  // useEffect(() => {
+  //   init();
+  //   setUserId(tgData.tgWebAppData?.user?.id ?? null);
+  // }, []);
 
   useEffect(() => {
     const checkPendingTransaction = async () => {
@@ -130,6 +135,15 @@ function App() {
           </>
         )}
       </p>
+
+      {isConnected && (
+        <button
+          onClick={disconnect}
+          className="ripple w-full bg-red-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-red-700 transition"
+        >
+          Discconect
+        </button>
+      )}
 
       <img src={image} className="rounded-md" />
 
