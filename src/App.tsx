@@ -46,7 +46,7 @@ function App() {
       const receipt = await provider.getTransactionReceipt(pendingTx);
 
       if (receipt && receipt.status === 1) {
-        fetch('https://group-app-backend.vercel.app/verify', {
+        fetch('https://windrunnersbackend.onrender.com/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tx: { hash: pendingTx }, userId, address }),
