@@ -45,7 +45,7 @@ function App() {
       });
 
       if (receipt && receipt.status === 'success') {
-        fetch('http://localhost:3000/verify', {
+        fetch('https://windrunnersbackend.onrender.com/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tx: { hash: pendingTx }, userId, address }),
