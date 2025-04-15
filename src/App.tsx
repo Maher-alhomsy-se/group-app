@@ -119,8 +119,13 @@ function App() {
 
   const handleConnect = (walletName: string) => {
     const wallet = connectors.find(({ name }) => name === walletName);
+    console.log(walletName);
+    console.log(wallet);
 
-    if (!wallet) return;
+    if (!wallet) {
+      toast.error('there is no wallet name');
+      return;
+    }
 
     connect({ connector: wallet });
   };
