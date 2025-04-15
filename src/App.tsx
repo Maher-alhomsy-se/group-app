@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import {
-  disconnect,
-  switchChain,
-  getWalletClient,
-  sendTransaction,
-} from '@wagmi/core';
+import { disconnect, switchChain, getWalletClient } from '@wagmi/core';
 import { base } from 'wagmi/chains';
 import { toast } from 'react-toastify';
 import { useConnect, useAccount } from 'wagmi';
