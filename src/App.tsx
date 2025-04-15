@@ -82,15 +82,21 @@ function App() {
       return;
     }
 
+    console.log('ADDRESS' + ADDRESS);
+
     try {
-      const txRequest = await walletClient.prepareTransactionRequest({
-        to: ADDRESS,
-        account: walletClient.account,
-        value: parseEther('0.005415'),
+      const txHash = await walletClient.request({
+        method: 'eth_sendTransaction',
+        params: [
+          {
+            from: walletClient.account.address,
+            to: ADDRESS, // <- make sure it's defined
+            value: `0x${parseEther('0.005415').toString(16)}`, // hex string required
+          },
+        ],
       });
 
-      // @ts-ignore
-      const txHash = await walletClient.sendTransaction(txRequest);
+      console.log(txHash);
 
       localStorage.setItem('pendingTx', txHash);
       setHash(txHash);
