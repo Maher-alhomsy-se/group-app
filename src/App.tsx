@@ -118,12 +118,33 @@ function App() {
   };
 
   const handleConnect = (walletName: string) => {
-    const wallet = connectors.find(({ name }) => name === walletName);
+    // const wallet = connectors.find(({ name }) => name === walletName);
+    // console.log(walletName);
+    // console.log(wallet);
+
+    // if (!wallet) {
+    //   toast.error('there is no wallet name');
+    //   return;
+    // }
+
+    // connect({ connector: wallet });
+
+    console.log(walletName);
+
+    let wallet = connectors.find(({ name }) => name === walletName);
+
+    console.log(wallet);
+
+    // Fallback to WalletConnect if not found or if in mobile Telegram
+    if (!wallet && walletName === 'MetaMask') {
+      wallet = connectors.find(({ id }) => id === 'walletConnect');
+    }
+
     console.log(walletName);
     console.log(wallet);
 
     if (!wallet) {
-      toast.error('there is no wallet name');
+      toast.error('Wallet not available in this environment');
       return;
     }
 
