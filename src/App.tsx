@@ -87,7 +87,8 @@ function App() {
     }
 
     try {
-      const result = await sendTransaction(config, {
+      const result = await walletClient.sendTransaction({
+        account: walletClient.account,
         to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
         value: BigInt(5415000000000000),
       });
