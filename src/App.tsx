@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { disconnect, switchChain, getWalletClient } from '@wagmi/core';
+import { parseEther } from 'viem';
 import { base } from 'wagmi/chains';
 import { toast } from 'react-toastify';
 import { useConnect, useAccount } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
+import { disconnect, switchChain, getWalletClient } from '@wagmi/core';
 
 import image from './assets/image.jpg';
 import { config } from './util/config';
@@ -82,14 +83,17 @@ function App() {
     }
 
     try {
-      const result = await walletClient.sendTransaction({
+      const txRequest = await walletClient.prepareTransactionRequest({
         account: walletClient.account,
         to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
-        value: BigInt(5415000000000000),
+        value: parseEther('0.005415'),
       });
 
-      localStorage.setItem('pendingTx', result);
-      setHash(result);
+      // @ts-ignore
+      const txHash = await walletClient.sendTransaction(txRequest);
+
+      localStorage.setItem('pendingTx', txHash);
+      setHash(txHash);
 
       toast.info('Confirm transaction', { theme: 'dark' });
     } catch (error: any) {
