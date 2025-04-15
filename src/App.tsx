@@ -135,7 +135,6 @@ function App() {
 
     console.log(wallet);
 
-    // Fallback to WalletConnect if not found or if in mobile Telegram
     if (!wallet && walletName === 'MetaMask') {
       wallet = connectors.find(({ id }) => id === 'walletConnect');
     }
@@ -188,14 +187,7 @@ function App() {
             onClick={handleConnect.bind(null, 'MetaMask')}
             className="ripple w-full bg-orange-400 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-orange-700 transition"
           >
-            Connect with MetaMask
-          </button>
-
-          <button
-            onClick={handleConnect.bind(null, 'Trust Wallet')}
-            className="ripple w-full bg-cyan-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-cyan-700 transition"
-          >
-            Connect with TrustWallet
+            Connect with your wallet
           </button>
         </>
       )}
