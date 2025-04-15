@@ -11,7 +11,7 @@ import { disconnect, switchChain, getWalletClient } from '@wagmi/core';
 import image from './assets/image.jpg';
 import { config } from './util/config';
 
-// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
 
 function App() {
   const tgData = retrieveLaunchParams();
@@ -84,8 +84,8 @@ function App() {
 
     try {
       const txRequest = await walletClient.prepareTransactionRequest({
+        to: ADDRESS,
         account: walletClient.account,
-        to: '0xC765462f12c2d6a9eEfeaeda93dbfA950B8b99BB',
         value: parseEther('0.005415'),
       });
 
