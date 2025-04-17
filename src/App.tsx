@@ -91,8 +91,10 @@ function App() {
       try {
         const contract = new Contract(CONTRACT_ADDRESS, ABI, signer);
 
-        const priceInWei = await contract.priceInWei();
-        const tx = await contract.pay({ value: priceInWei });
+        // const priceInWei = await contract.priceInWei();
+
+        const value = BigInt('10000000000000000'); // 0.01 ETH in wei
+        const tx = await contract.pay({ value }); // send 0.01 ETH manually
 
         localStorage.setItem('pendingTx', tx.hash);
         setHash(tx.hash);
