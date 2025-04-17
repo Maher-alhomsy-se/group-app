@@ -1,22 +1,28 @@
 import { useEffect, useState } from 'react';
 
-import { parseEther } from 'viem';
-import { base } from 'wagmi/chains';
+import {
+  useDisconnect,
+  useAppKitAccount,
+  useAppKitProvider,
+} from '@reown/appkit/react';
 import { toast } from 'react-toastify';
-import { useConnect, useAccount } from 'wagmi';
-import { waitForTransactionReceipt } from 'wagmi/actions';
+import type { EIP1193Provider } from 'viem';
+import { BrowserProvider, Contract } from 'ethers';
 import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
-import { disconnect, switchChain, getWalletClient } from '@wagmi/core';
 
+import { ABI } from './constants/ABI';
 import image from './assets/image.jpg';
-import { config } from './util/config';
+import connectWallet from './util/connectWallet';
+import { switchToBase } from './util/switchToBase';
 
-const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+// const ADDRESS = import.meta.env.VITE_WALLET_ADDRESS;
+const CONTRACT_ADDRESS = '0xF7b801e16Bb4E10400F85E8EEd143802039AD7bA';
 
 function App() {
   const tgData = retrieveLaunchParams();
-  const { connect, connectors } = useConnect();
-  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { isConnected, address } = useAppKitAccount();
+  const { walletProvider } = useAppKitProvider<EIP1193Provider>('eip155');
 
   const [hash, setHash] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
@@ -34,13 +40,14 @@ function App() {
     const checkPendingTransaction = async () => {
       const pendingTx = localStorage.getItem('pendingTx');
 
-      if (!pendingTx) return;
+      if (!pendingTx) {
+        return;
+      }
 
-      const receipt = await waitForTransactionReceipt(config, {
-        hash: pendingTx as `0x${string}`,
-      });
+      const provider = new BrowserProvider(walletProvider);
+      const receipt = await provider.getTransactionReceipt(pendingTx);
 
-      if (receipt && receipt.status === 'success') {
+      if (receipt && receipt.status === 1) {
         fetch('https://windrunnersbackend.onrender.com/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -66,6 +73,7 @@ function App() {
   const payHandler = async () => {
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
+      connectWallet();
       return;
     }
 
@@ -74,86 +82,50 @@ function App() {
       return;
     }
 
-    const walletClient = await getWalletClient(config);
-    const chainId = await walletClient.getChainId();
+    const provider = new BrowserProvider(walletProvider);
 
-    if (chainId.toString() !== '8453') {
+    const signer = await provider.getSigner();
+    const network = await provider.getNetwork();
+
+    if (network.chainId.toString() === '8453') {
+      try {
+        const contract = new Contract(CONTRACT_ADDRESS, ABI, signer);
+
+        const priceInWei = await contract.priceInWei();
+        const tx = await contract.pay({ value: priceInWei });
+
+        localStorage.setItem('pendingTx', tx.hash);
+        setHash(tx.hash);
+
+        toast.info('Confirm transaction', { theme: 'dark' });
+
+        await tx.wait();
+      } catch (error: any) {
+        console.error(error);
+
+        let errorMessage = error.info?.error?.message || 'Transaction failed';
+
+        toast.error(errorMessage, { theme: 'dark' });
+      }
+    } else {
       toast.error('Please switch to the correct network', { theme: 'dark' });
-      return;
-    }
-
-    console.log('ADDRESS' + ADDRESS);
-
-    try {
-      const txHash = await walletClient.request({
-        method: 'eth_sendTransaction',
-        params: [
-          {
-            from: walletClient.account.address,
-            to: ADDRESS, // <- make sure it's defined
-            value: `0x${parseEther('0.005415').toString(16)}`, // hex string required
-          },
-        ],
-      });
-
-      console.log(txHash);
-
-      localStorage.setItem('pendingTx', txHash);
-      setHash(txHash);
-
-      toast.info('Confirm transaction', { theme: 'dark' });
-    } catch (error: any) {
-      console.log(error);
-
-      let errorMessage = error.info?.error?.message || 'Transaction failed';
-      toast.error(errorMessage, { theme: 'dark' });
+      await switchToBase(walletProvider);
     }
   };
 
   const switchNetowrk = async () => {
     if (!isConnected) {
       toast.error('Connect with your wallet', { theme: 'dark' });
+      connectWallet();
       return;
     }
 
-    await switchChain(config, { chainId: base.id });
-  };
-
-  const handleDisconnect = async () => {
-    await disconnect(config);
-  };
-
-  const handleConnect = (walletName: string) => {
-    // const wallet = connectors.find(({ name }) => name === walletName);
-    // console.log(walletName);
-    // console.log(wallet);
-
-    // if (!wallet) {
-    //   toast.error('there is no wallet name');
-    //   return;
-    // }
-
-    // connect({ connector: wallet });
-
-    console.log(walletName);
-
-    let wallet = connectors.find(({ name }) => name === walletName);
-
-    console.log(wallet);
-
-    if (!wallet && walletName === 'MetaMask') {
-      wallet = connectors.find(({ id }) => id === 'walletConnect');
-    }
-
-    console.log(walletName);
-    console.log(wallet);
-
-    if (!wallet) {
-      toast.error('Wallet not available in this environment');
+    if (!walletProvider) {
+      toast.error('Wallet provider not found', { theme: 'dark' });
       return;
     }
 
-    connect({ connector: wallet });
+    await switchToBase(walletProvider);
   };
 
   return (
@@ -169,7 +141,7 @@ function App() {
 
       {isConnected && (
         <button
-          onClick={handleDisconnect}
+          onClick={disconnect}
           className="ripple w-full bg-sky-700 text-black font-semibold py-3 mt-4 rounded-lg shadow-md"
         >
           Disconnect
@@ -187,23 +159,14 @@ function App() {
         </p>
       </div>
 
-      {!isConnected && (
-        <>
-          <button
-            onClick={handleConnect.bind(null, 'MetaMask')}
-            className="ripple w-full bg-orange-400 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-orange-700 transition"
-          >
-            Connect with your wallet
-          </button>
-        </>
-      )}
-
-      <button
-        onClick={switchNetowrk}
-        className="ripple w-full bg-blue-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-blue-700 transition"
-      >
-        🔄 Switch to Base Network
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={switchNetowrk}
+          className="ripple w-full bg-blue-500 text-white font-semibold py-3 mt-4 rounded-lg shadow-md hover:bg-blue-700 transition"
+        >
+          🔄 Switch to Base Network
+        </button>
+      </div>
 
       <div className="flex items-center flex-wrap gap-2">
         <button

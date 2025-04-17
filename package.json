@@ -19,7 +19,10 @@
     "@telegram-auth/react": "^1.0.4",
     "@wagmi/connectors": "^5.7.12",
     "@wagmi/core": "^2.16.7",
+    "@walletconnect/ethereum-provider": "^2.20.0",
+    "@walletconnect/web3-provider": "^1.8.0",
     "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/ethers": "^5.1.11",
     "@web3modal/react": "^2.7.1",
     "@web3modal/wagmi": "^5.1.11",
     "ethers": "^6.13.5",
@@ -27,9 +30,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^11.0.3",
+    "reown": "^1.1.4",
     "tailwindcss": "^4.0.8",
-    "viem": "^2.26.5",
-    "wagmi": "^2.14.16"
+    "viem": "^2.27.0",
+    "wagmi": "^2.14.16",
+    "web3modal": "^1.9.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
